@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: Minesweeper API
+  version: 1.0.0
+  description: "REST API for Minesweeper"
+servers:
+  - url: 'https://api.minesweepers.games/'
+    description: production
+security:
+  - KeyAuth: []
+paths:
+  /signup:
+    post:
+      summary: "Creates a new user"
+      description: "Signups a new user"
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUser"
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/ResponseUser"
+  /signin:
+    post:
+      summary: "Logins the user"
+      description: "Returns user information, including the token"
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+              required:
+                - "login"
+                - "password"
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/ResponseUser"
+
+
+
+
+components:
+  securitySchemes:
+    KeyAuth:
+      type: apiKey
+      name: key
+      in: header
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    RequestUser:
+      allOf:
+        - $ref : "#/components/schemas/User"
+    ResponseUser:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+        - $ref: "#/components/schemas/User"
+
+
+
+
