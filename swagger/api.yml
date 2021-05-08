@@ -135,6 +135,38 @@ paths:
                   - $ref: "#/components/schemas/MediumGame"
                   - $ref: "#/components/schemas/HardGame"
 
+  /games/{difficulty}/stats:
+    get:
+      summary: "Returns top 10 players by difficulty"
+      tags:
+        - "games"
+      security:
+        - KeyAuth: [ ]
+      parameters:
+        - in: path
+          required: true
+          name: difficulty
+          schema:
+            type: string
+            enum:
+              - "easy"
+              - "medium"
+              - "hard"
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_players:
+                    type: array
+                    minLength: 10
+                    maxLength: 10
+                    items:
+                      $ref: "#/components/schemas/ResponseUser"
+
 
 
 
@@ -156,14 +188,14 @@ components:
           type: string
         lastname:
           type: string
-        email:
-          type: string
     RequestUser:
       allOf:
         - $ref : "#/components/schemas/User"
         - type: object
           properties:
             password:
+              type: string
+            email:
               type: string
     ResponseUser:
       allOf:
@@ -273,19 +305,14 @@ components:
         wins_count:
           type: number
         best_results:
-          type: array
-          items:
-            type: object
-            properties:
-              difficulty:
-                type: string
-                enum:
-                  - "easy"
-                  - "medium"
-                  - "hard"
-              best_time:
-                type: number
-                description: "best time in seconds"
+          type: object
+          properties:
+            easy:
+              type: number
+            medium:
+              type: number
+            hard:
+              type: number
 
 
 
