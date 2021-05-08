@@ -6,10 +6,8 @@ info:
 servers:
   - url: 'https://api.minesweepers.games/'
     description: production
-security:
-  - KeyAuth: []
 paths:
-  /signup:
+  /users:
     post:
       summary: "Creates a new user"
       description: "Signups a new user"
@@ -27,7 +25,7 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/ResponseUser"
-  /signin:
+  /user/sessions:
     post:
       summary: "Logins the user"
       description: "Returns user information, including the token"
@@ -58,6 +56,86 @@ paths:
                     type: string
                   user:
                     $ref: "#/components/schemas/ResponseUser"
+  /user:
+    get:
+      summary: "Get statistics about user play history"
+      tags:
+        - "user"
+      security:
+        - KeyAuth: [ ]
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ResponseUser"
+                  - $ref: "#/components/schemas/UserStats"
+  /games:
+    post:
+      summary: "Creates a new game"
+      tags:
+        - "games"
+      security:
+        - KeyAuth: [ ]
+      parameters:
+        - in: query
+          required: true
+          name: difficulty
+          schema:
+            type: string
+            enum:
+              - "easy"
+              - "medium"
+              - "hard"
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref : "#/components/schemas/EasyGame"
+                  - $ref : "#/components/schemas/MediumGame"
+                  - $ref : "#/components/schemas/HardGame"
+  /games/{gameId}:
+    put:
+      summary: "Opens a cell and returns updated map"
+      tags:
+        - "games"
+      security:
+        - KeyAuth: [ ]
+      parameters:
+        - in: path
+          required: true
+          name: gameId
+          schema:
+            type: string
+        - in: query
+          required: true
+          schema:
+            type: number
+          name: x
+          description: "0 based row index of the cell"
+        - in: query
+          required: true
+          schema:
+            type: number
+          name: y
+          description: "0 based column index of the cell"
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/EasyGame"
+                  - $ref: "#/components/schemas/MediumGame"
+                  - $ref: "#/components/schemas/HardGame"
+
+
 
 
 
@@ -80,11 +158,13 @@ components:
           type: string
         email:
           type: string
-        password:
-          type: string
     RequestUser:
       allOf:
         - $ref : "#/components/schemas/User"
+        - type: object
+          properties:
+            password:
+              type: string
     ResponseUser:
       allOf:
         - type: object
@@ -92,6 +172,120 @@ components:
             id:
               type: string
         - $ref: "#/components/schemas/User"
+    Game:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - "win"
+            - "lose"
+            - "pending"
+    EasyGame:
+      allOf:
+        - type: object
+          properties:
+            map:
+              type: array
+              maxLength: 9
+              minLength: 9
+              items:
+                type: array
+                maxLength: 9
+                minLength: 9
+                items:
+                  oneOf:
+                    - $ref : "#/components/schemas/BombCell"
+                    - $ref : "#/components/schemas/ClosedCell"
+                    - $ref:  "#/components/schemas/OpenCell"
+        - $ref: "#/components/schemas/Game"
+    MediumGame:
+      allOf:
+        - type: object
+          properties:
+            map:
+              type: array
+              maxLength: 16
+              minLength: 16
+              items:
+                type: array
+                maxLength: 16
+                minLength: 16
+                items:
+                  oneOf:
+                    - $ref: "#/components/schemas/BombCell"
+                    - $ref: "#/components/schemas/ClosedCell"
+                    - $ref: "#/components/schemas/OpenCell"
+
+        - $ref: "#/components/schemas/Game"
+    HardGame:
+      allOf:
+        - type: object
+          properties:
+            map:
+              type: array
+              maxLength: 30
+              minLength: 30
+              items:
+                type: array
+                maxLength: 16
+                minLength: 16
+                items:
+                  oneOf:
+                    - $ref: "#/components/schemas/BombCell"
+                    - $ref: "#/components/schemas/ClosedCell"
+                    - $ref: "#/components/schemas/OpenCell"
+        - $ref: "#/components/schemas/Game"
+
+
+    ClosedCell:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - "closed"
+    OpenCell:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - "open"
+        bomb_neighbors_count:
+          type: number
+    BombCell:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - "bomb"
+
+
+
+
+    UserStats:
+      type: object
+      properties:
+        games_count:
+          type: number
+        wins_count:
+          type: number
+        best_results:
+          type: array
+          items:
+            type: object
+            properties:
+              difficulty:
+                type: string
+                enum:
+                  - "easy"
+                  - "medium"
+                  - "hard"
+              best_time:
+                type: number
+                description: "best time in seconds"
 
 
 
