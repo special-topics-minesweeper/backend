@@ -24,7 +24,12 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/ResponseUser"
+                type: object
+                properties:
+                  key:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/ResponseUser"
   /user/sessions:
     post:
       summary: "Logins the user"
@@ -165,7 +170,9 @@ paths:
                     minLength: 10
                     maxLength: 10
                     items:
-                      $ref: "#/components/schemas/ResponseUser"
+                      allOf:
+                        - $ref: "#/components/schemas/ResponseUser"
+                        - $ref: "#/components/schemas/UserStats"
 
 
 
@@ -293,10 +300,6 @@ components:
           type: string
           enum:
             - "bomb"
-
-
-
-
     UserStats:
       type: object
       properties:
