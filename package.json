@@ -1,0 +1,20 @@
+{
+  "name": "minesweeper-backend",
+  "version": "1.0.0",
+  "description": "REST api for minsweeper",
+  "main": "index.js",
+  "scripts": {
+    "run": "docker build . -t minesweeper-backend; docker run -p 1238:1238 minesweeper-backend",
+    "__internal-docker-run" : "node ./dist/index.js"
+  },
+  "author": "Hovhannes, Lilit, David",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "source-map-support": "^0.5.19",
+    "swagger-ui-express": "^4.1.6",
+    "typescript": "^4.2.4",
+    "typescript-rest": "^3.0.2",
+    "yamljs": "^0.3.0"
+  }
+}
