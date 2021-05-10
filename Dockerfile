@@ -1,6 +1,6 @@
 FROM node:12
 WORKDIR /minesweeper/
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
 
 COPY . .
