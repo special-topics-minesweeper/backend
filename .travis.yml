@@ -18,6 +18,7 @@ services:
 # https://stackoverflow.com/q/31882306/2037323
 branches:
   only:
+    - dev
     - main
 
 before_script:
