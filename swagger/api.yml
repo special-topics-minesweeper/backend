@@ -30,7 +30,7 @@ paths:
                     type: string
                   user:
                     $ref: "#/components/schemas/ResponseUser"
-  /user/sessions:
+  /user/key:
     post:
       summary: "Logins the user"
       description: "Returns user information, including the token"
@@ -59,8 +59,6 @@ paths:
                 properties:
                   key:
                     type: string
-                  user:
-                    $ref: "#/components/schemas/ResponseUser"
   /user:
     get:
       summary: "Get statistics about user play history"
@@ -214,6 +212,8 @@ components:
     Game:
       type: object
       properties:
+        id:
+          type: string
         status:
           type: string
           enum:
