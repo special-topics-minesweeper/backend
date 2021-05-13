@@ -4,14 +4,21 @@
   "description": "REST api for minsweeper",
   "main": "index.js",
   "scripts": {
-    "run": "docker-compose up"
+    "run": "docker-compose up --build"
   },
   "author": "Hovhannes, Lilit, David",
   "license": "ISC",
   "dependencies": {
-    "awilix": "^4.3.4",
+    "bcrypt": "^5.0.1",
+    "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "express-unless": "^0.5.0",
+    "http-errors": "^1.8.0",
+    "inversify": "^5.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.3.0",
     "mongoose": "^5.12.8",
+    "nanoid": "^3.1.23",
     "source-map-support": "^0.5.19",
     "swagger-ui-express": "^4.1.6",
     "typescript": "^4.2.4",

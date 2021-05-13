@@ -61,7 +61,7 @@ paths:
                     type: string
   /user:
     get:
-      summary: "Get statistics about user play history"
+      summary: "Get user info"
       tags:
         - "user"
       security:
@@ -138,11 +138,11 @@ paths:
                   - $ref: "#/components/schemas/MediumGame"
                   - $ref: "#/components/schemas/HardGame"
 
-  /games/{difficulty}/stats:
+  /{difficulty}/users:
     get:
       summary: "Returns top 10 players by difficulty"
       tags:
-        - "games"
+        - "users"
       security:
         - KeyAuth: [ ]
       parameters:
