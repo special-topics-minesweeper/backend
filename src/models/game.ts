@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 export type OpenCell = {
     type : 'open'
+    bomb_neighbors_count : number
 }
 
 export type ClosedCell = {
@@ -11,7 +12,6 @@ export type ClosedCell = {
 
 export type BombCell = {
     type : 'bomb',
-    bomb_neighbors_count : number
 }
 
 export interface Game {
