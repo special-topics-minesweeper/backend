@@ -1,8 +1,9 @@
 import {inject, injectable} from "inversify";
 import {Model, Schema, ObjectId} from "mongoose";
 import {DBCollections} from "../constants";
-import {Game} from "../models/game";
+import {BombCell, ClosedCell, Game} from "../models/game";
 import {projectFields} from "../utils";
+import {OpenCell} from "../models/game"
 const gameFields : (keyof Omit<Game, 'bomb_positions'>)[] = ['id',  'status', 'map', 'user_id', 'difficulty'];
 
 
@@ -43,6 +44,28 @@ export class GameService {
     private static getRandomInt(min : number, max : number) {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
+
+    private static x(game : Pick<Game, 'map' | 'bomb_positions'>, x : number, y: number) : Pick<Game, 'map' | 'bomb_positions'> {
+        // game.map[x][y].type = 'open'
+        game.map[x][y] = {type:'open',bomb_neighbors_count:0}
+        const newMap = [...game.map]
+        // change includes logics
+        if (game.bomb_positions.includes([x,y])) {
+            
+            game.bomb_positions.forEach(index => {
+                newMap[index[0]][index[1]].type='bomb'
+            })
+            return {map : newMap, bomb_positions : game.bomb_positions}
+                   }
+        else {
+            // Logic when clicking closed cell ( which is not the bomb)
+        }
+        // Return the game
+        return {map : newMap, bomb_positions : game.bomb_positions}
+        
+    }
+ 
+
 
     public async saveGame(difficulty : 'easy' | 'medium' | 'hard', userId : string) : Promise<Omit<Game, 'bomb_positions'>> {
         const [dimensions, bombsCount] = GameService.getPropertiesByDifficulty(difficulty);
