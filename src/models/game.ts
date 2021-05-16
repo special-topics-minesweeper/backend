@@ -14,13 +14,16 @@ export type BombCell = {
     type : 'bomb',
 }
 
+export type GameDifficulty = 'easy' | 'medium' | 'hard';
+
 export interface Game {
     id : string
     status : 'win' | 'lose' | 'pending'
     map : (OpenCell | ClosedCell | BombCell)[][],
     bomb_positions : [number, number][],
     user_id : string
-    difficulty : string
+    difficulty : GameDifficulty,
+    create_date : Date
 }
 const MapCell : Schema = new Schema({
     type : {

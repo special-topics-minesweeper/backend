@@ -133,10 +133,21 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/EasyGame"
-                  - $ref: "#/components/schemas/MediumGame"
-                  - $ref: "#/components/schemas/HardGame"
+                allOf:
+                  - oneOf:
+                    - $ref: "#/components/schemas/EasyGame"
+                    - $ref: "#/components/schemas/MediumGame"
+                    - $ref: "#/components/schemas/HardGame"
+                  - type: object
+                    properties:
+                      bomb_positions:
+                        type : array
+                        items:
+                          type : array
+                          minLength: 2
+                          maxLength: 2
+                          items:
+                            type : number
 
   /{difficulty}/users:
     get:

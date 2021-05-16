@@ -5,3 +5,11 @@ export function projectFields<T, K extends keyof T>(obj : T, fields : K[]) : Pic
     }
     return resultObj;
 }
+
+export function isTupleInArray(arr : [number, number][], value : [number, number]) {
+    return arr.filter((item) => item[0] === value[0] && item[1] === value[1]).length !== 0;
+}
+
+export function getRandomInt(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

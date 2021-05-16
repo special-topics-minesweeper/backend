@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import {nanoid} from "nanoid"
 import {projectFields} from "../utils";
 import {Conflict} from "http-errors"
+import {GameDifficulty} from "../models/game";
 const userFields : (keyof OutputUser)[] = ['id', 'username', 'firstname', 'lastname', 'email', 'games_count', 'wins_count', 'best_results'];
 @injectable()
 export class UserService {
@@ -36,6 +37,36 @@ export class UserService {
             await this.userModel.findOne({_id : userId}).lean(),
             userFields
         )
+    }
+
+    public async addToGameHistory(userId : string, win : boolean, difficulty : GameDifficulty, time: number) {
+        await this.userModel.updateOne({
+            _id : userId
+        }, {
+            $inc : {
+                games_count : 1,
+                wins_count : win ? 1 : 0
+            }
+        });
+        if(win) {
+            await this.userModel.updateOne({
+                _id: userId,
+                $or : [
+                    {
+                        [`best_results.${difficulty}`] : {
+                            $gt: time
+                        }
+                    },
+                    {
+                        [`best_results.${difficulty}`] : -1
+                    }
+                ]
+            }, {
+                $set: {
+                    [`best_results.${difficulty}`]: time
+                }
+            })
+        }
     }
 
     public async findBestUsersByDifficulty(difficulty : 'easy' | 'medium' | 'hard') : Promise<OutputUser[]> {
