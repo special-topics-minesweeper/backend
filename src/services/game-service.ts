@@ -111,7 +111,6 @@ export class GameService {
         x: number,
         y: number
     ): Pick<Game, 'map' | 'bomb_positions'> {
-        game.map[0][0] = {type : "open", bomb_neighbors_count : 0};
 
         // change includes logics
         const isBomb = isTupleInArray(game.bomb_positions, [x, y]);
