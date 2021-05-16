@@ -77,8 +77,9 @@ export class GameService {
     public async updateGameByOpeningACell(gameId : string, x : number, y : number, userId : string) : Promise<Omit<Game, 'bomb_positions'> | null> {
         if(!Types.ObjectId.isValid(gameId)) return null;
         const game = await this.gamesModel.findOne({ _id : gameId, user_id : userId });
-        if(!game) return null;
-        console.log(projectFields(game, ['map', 'bomb_positions']));
+        if(!game) {
+            return null;
+        }
         game.map = GameService.openCellOnAGame(projectFields(game, ['map', 'bomb_positions']), x, y).map;
         game.status = GameService.getGameStatus(game.map, game.bomb_positions, x, y);
         await this.gamesModel.update({ _id : gameId, user_id : userId }, { $set : { map : game.map, status : game.status } });
