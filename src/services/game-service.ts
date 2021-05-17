@@ -76,7 +76,7 @@ export class GameService {
 
     public async updateGameByOpeningACell(gameId : string, x : number, y : number, userId : string) : Promise<Omit<Game, 'bomb_positions'> | null> {
         if(!Types.ObjectId.isValid(gameId)) return null;
-        const game = await this.gamesModel.findOne({ _id : gameId, user_id : userId });
+        const game = await this.gamesModel.findOne({ _id : gameId, user_id : userId, status : 'pending' });
         if(!game) {
             return null;
         }
