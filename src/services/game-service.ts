@@ -88,6 +88,9 @@ export class GameService {
         if(y < 0 || y >= columnCount) {
             throw new BadRequest("y is invalid");
         }
+        if(game.map[x][y].type === "open") {
+            throw new BadRequest("The cell is already open");
+        }
 
         game.map = GameService.openCellOnAGame(projectFields(game, ['map', 'bomb_positions']), x, y).map;
         game.status = GameService.getGameStatus(game.map, game.bomb_positions, x, y);
