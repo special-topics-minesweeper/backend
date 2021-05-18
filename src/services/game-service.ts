@@ -139,7 +139,7 @@ export class GameService {
             const [x1, y1] = queue[0];
             queue.shift();
 
-            if (game.map[x1][y1].type === 'open' || isTupleInArray(game.bomb_positions, [x1, y1])) continue;
+            if (game.map[x1][y1].type === 'open') continue;
 
             const bomb_neighbors_count = GameService.getNeighborBombs(game, [
                 x1,
