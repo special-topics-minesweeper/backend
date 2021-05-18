@@ -56,7 +56,7 @@ export class GameService {
         let bombPositionCandidates: [number, number][][] = [];
         for (let i = 0; i < rowsCount; i++) {
             const candidatesRow: [number, number][] = [];
-            for (let j = 0; j < rowsCount; j++) {
+            for (let j = 0; j < columnsCount; j++) {
                 candidatesRow.push([i, j]);
             }
             bombPositionCandidates.push(candidatesRow);
