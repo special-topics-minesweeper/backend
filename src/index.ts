@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 import express from 'express';
 import { Server } from 'typescript-rest';
+import cors from 'cors'
 import 'reflect-metadata'
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
@@ -15,6 +16,7 @@ initContainer().then(container => {
     const logger: Logger = getLogger('app');
     logger.level = 'info';
     const app = express();
+    app.use(cors());
     app.use('/swagger-docs', swaggerUi.serve,  swaggerUi.setup(swaggerDocument));
     app.use('/', authMiddleware(container).unless({ path : [ '/user/key', '/users' ] }))
     Server.registerServiceFactory({
