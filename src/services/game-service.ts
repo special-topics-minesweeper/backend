@@ -5,6 +5,7 @@ import {BombCell, ClosedCell, Game, GameDifficulty} from '../models/game';
 import {projectFields, isTupleInArray, getRandomInt} from '../utils';
 import {OpenCell} from '../models/game';
 import {UserService} from "./user-service";
+import {BadRequest} from "http-errors"
 
 const gameFields: (keyof Omit<Game, 'bomb_positions'>)[] = [
     'id',
@@ -80,6 +81,14 @@ export class GameService {
         if(!game) {
             return null;
         }
+        const [[rowCount, columnCount]] =  GameService.getPropertiesByDifficulty(game.difficulty);
+        if(x < 0 || x >= rowCount) {
+            throw new BadRequest("x in invalid!");
+        }
+        if(y < 0 || y >= columnCount) {
+            throw new BadRequest("y is invalid");
+        }
+
         game.map = GameService.openCellOnAGame(projectFields(game, ['map', 'bomb_positions']), x, y).map;
         game.status = GameService.getGameStatus(game.map, game.bomb_positions, x, y);
         await this.gamesModel.update({ _id : gameId, user_id : userId }, { $set : { map : game.map, status : game.status } });
@@ -130,7 +139,7 @@ export class GameService {
 
             if (game.map[x1][y1].type === 'open') continue;
 
-            const bomb_neighbors_count = GameService.getNeighborBombs(game.map, [
+            const bomb_neighbors_count = GameService.getNeighborBombs(game, [
                 x1,
                 y1,
             ]);
@@ -155,7 +164,7 @@ export class GameService {
             [1, -1],
             [-1, 1],
         ];
-        return v.filter(([h, j]) => h + x >= 0 && h + x < map.length && j + y >= 0 && j + y < map[0].lengthax)
+        return v.filter(([h, j]) => h + x >= 0 && h + x < map.length && j + y >= 0 && j + y < map[0].length)
             .map(([i, j]) => [x + i, y + j]);
     };
 
