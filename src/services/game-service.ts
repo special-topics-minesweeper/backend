@@ -48,7 +48,7 @@ export class GameService {
             case 'medium':
                 return [[16, 16], 40];
             case 'hard':
-                return [[30, 16], 99];
+                return [[16, 30], 99];
         }
     }
 
@@ -91,9 +91,7 @@ export class GameService {
         if(game.map[x][y].type === "open") {
             throw new BadRequest("The cell is already open");
         }
-        const startDate = new Date();
         game.map = GameService.openCellOnAGame(projectFields(game, ['map', 'bomb_positions']), x, y).map;
-        console.log('time diff of open in milli ', new Date().getTime() - startDate.getTime());
         game.status = GameService.getGameStatus(game.map, game.bomb_positions, x, y);
         await this.gamesModel.update({ _id : gameId, user_id : userId }, { $set : { map : game.map, status : game.status } });
 
